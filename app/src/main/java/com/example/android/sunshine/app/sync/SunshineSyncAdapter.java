@@ -26,6 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.android.sunshine.app.BuildConfig;
 import com.example.android.sunshine.app.MainActivity;
@@ -49,7 +50,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
     // Interval at which to sync with the weather, in seconds.
     // 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 60 * 180;
+    //public static final int SYNC_INTERVAL = 60 * 180;
+    public static final int SYNC_INTERVAL = 30;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
@@ -362,7 +364,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                                     .setSmallIcon(iconId)
                                     .setLargeIcon(largeIcon)
                                     .setContentTitle(title)
-                                    .setContentText(contentText);
+                                    .setContentText("天雨路滑, 助教走路要看車"); /*Assignment 更動*/
 
                     // Make something interesting happen when the user clicks on the notification.
                     // In this case, opening the app is sufficient.
@@ -384,12 +386,16 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     NotificationManager mNotificationManager =
                             (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                     // WEATHER_NOTIFICATION_ID allows you to update the notification later on.
-                    mNotificationManager.notify(WEATHER_NOTIFICATION_ID, mBuilder.build());
 
-                    //refreshing last sync
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putLong(lastNotificationKey, System.currentTimeMillis());
-                    editor.commit();
+                    /*Assignment 更動*/
+                    if(desc.equals("Rain")) {
+                        mNotificationManager.notify(WEATHER_NOTIFICATION_ID, mBuilder.build());
+
+                        //refreshing last sync
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putLong(lastNotificationKey, System.currentTimeMillis());
+                        editor.commit();
+                    }
                 }
                 cursor.close();
             }
